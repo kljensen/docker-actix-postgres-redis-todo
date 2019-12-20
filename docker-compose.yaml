@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:11.6-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+
+  redis:
+    image: redis:5.0.7-alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  todo:
+    build: todo
+    working_dir: /app
+    entrypoint: /app/run.sh
+    volumes:
+      - ./todo:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    links:
+      - db
+      - redis
+    environment:
+      - PORT:${TODO_PORT}
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}
