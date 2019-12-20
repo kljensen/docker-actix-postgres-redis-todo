@@ -10,10 +10,12 @@ extern crate tera;
 use std::{env, io};
 
 use actix_files as fs;
+// use actix_redis::RedisSession;
 use actix_session::CookieSession;
 use actix_web::middleware::{errhandlers::ErrorHandlers, Logger};
 use actix_web::{http, web, App, HttpServer};
 use dotenv::dotenv;
+use listenfd::ListenFd;
 use tera::Tera;
 
 mod api;
@@ -40,7 +42,10 @@ async fn main() -> io::Result<()> {
         let templates: Tera = compile_templates!("templates/**/*");
 
         let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);
-
+        // let redis_host = env::var("REDIS_HOST").unwrap();
+        // let redis_port = env::var("REDIS_PORT").unwrap();
+        // let redis_url = format!("{}:{}", redis_host, redis_port);
+        // let session_store = RedisSession::new(redis_url, &[0; 32]);
         let error_handlers = ErrorHandlers::new()
             .handler(
                 http::StatusCode::INTERNAL_SERVER_ERROR,
@@ -62,5 +67,16 @@ async fn main() -> io::Result<()> {
     };
 
     debug!("Starting server");
-    HttpServer::new(app).bind("0.0.0.0:8000")?.start().await
+    let mut listenfd = ListenFd::from_env();
+    let mut server = HttpServer::new(app);
+    server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
+        println!("starting server");
+        server.listen(l).unwrap()
+    } else {
+        let port = env::var("PORT").unwrap();
+        let bind_config = format!("0.0.0.0:{}", port);
+        println!("listening on {}", bind_config);
+        server.bind(bind_config).unwrap()
+    };
+    server.start().await
 }
