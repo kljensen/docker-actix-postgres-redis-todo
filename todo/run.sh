@@ -7,6 +7,7 @@ env
 
 if [[ -z "${DEVELOPMENT}" ]]; then
     echo "Running in production!"
+    cargo run
 else
     # Systemfd will help us move an open socket to the
     # new process when the process restarts. cargo-watch
