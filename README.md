@@ -42,3 +42,8 @@ actix-redis = {version = "0.8.0", features = ["web"]}
 actix-rt = "1.0.0"
 ```
 
+## License
+
+Code by Kyle Jensen in this repo is available under the 
+[Unlicense](https://unlicense.org/). The code by the Actix
+authors is under an Apache license [here](https://github.com/actix/examples/blob/master/LICENSE).
