@@ -16,7 +16,6 @@ something like as follows:
 ```
 POSTGRES_USER=foobar
 POSTGRES_PASSWORD=ram-crud-headache-airplane
-SUPERUSER_EMAIL=myemail@gmail.com
 POSTGRES_DB=todo
 POSTGRES_PORT=5432
 REDIS_HOST=redis
