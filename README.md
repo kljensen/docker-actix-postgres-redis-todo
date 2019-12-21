@@ -1,8 +1,14 @@
 # Docker actix postgres redis todo example
 
-This is a Dockerized version of the 
+This is a Dockerized version of the [Rust](https://www.rust-lang.org/)
 [actix todo example](https://github.com/actix/examples/tree/master/todo).
-It uses Docker, actix, postgres, redis, and diesel.
+It uses
+[Docker](https://www.docker.com/),
+[actix](https://actix.rs/),
+[postgres](https://www.postgresql.org/),
+[redis](https://redis.io/),
+and [diesel](https://diesel.rs/).
+
 
 To run it, do
 
