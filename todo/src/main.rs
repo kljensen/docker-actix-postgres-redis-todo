@@ -10,8 +10,8 @@ extern crate tera;
 use std::{env, io};
 
 use actix_files as fs;
-// use actix_redis::RedisSession;
-use actix_session::CookieSession;
+use actix_redis::RedisSession;
+// use actix_session::CookieSession;
 use actix_web::middleware::{errhandlers::ErrorHandlers, Logger};
 use actix_web::{http, web, App, HttpServer};
 use dotenv::dotenv;
@@ -24,13 +24,16 @@ mod model;
 mod schema;
 mod session;
 
-static SESSION_SIGNING_KEY: &[u8] = &[0; 32];
+// static SESSION_SIGNING_KEY: &[u8] = &[0; 32];
 
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
     dotenv().ok();
 
-    env::set_var("RUST_LOG", "actix_todo=debug,actix_web=info");
+    env::set_var(
+        "RUST_LOG",
+        "actix_todo=debug,actix_web=info,actix_redis=info",
+    );
     env_logger::init();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
@@ -41,11 +44,11 @@ async fn main() -> io::Result<()> {
 
         let templates: Tera = compile_templates!("templates/**/*");
 
-        let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);
-        // let redis_host = env::var("REDIS_HOST").unwrap();
-        // let redis_port = env::var("REDIS_PORT").unwrap();
-        // let redis_url = format!("{}:{}", redis_host, redis_port);
-        // let session_store = RedisSession::new(redis_url, &[0; 32]);
+        // let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);
+        let redis_host = env::var("REDIS_HOST").unwrap();
+        let redis_port = env::var("REDIS_PORT").unwrap();
+        let redis_url = format!("{}:{}", redis_host, redis_port);
+        let session_store = RedisSession::new(redis_url, &[0; 32]);
         let error_handlers = ErrorHandlers::new()
             .handler(
                 http::StatusCode::INTERNAL_SERVER_ERROR,
