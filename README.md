@@ -2,9 +2,7 @@
 
 This is a Dockerized version of the 
 [actix todo example](https://github.com/actix/examples/tree/master/todo).
-
-Uses diesel.
-
+It uses Docker, actix, postgres, redis, and diesel.
 
 To run it, do
 
@@ -31,7 +29,7 @@ In development mode, the app will auto-reload on code change
 using [cargo-watch](https://github.com/passcod/cargo-watch)
 and [listenfd](https://github.com/mitsuhiko/rust-listenfd).
 
-To view the app, visit [http://localhost:8000].
+To view the app, visit [http://localhost:8000](http://localhost:8000).
 
 ## Dependencies
 
